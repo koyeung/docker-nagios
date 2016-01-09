@@ -25,7 +25,7 @@ Get it from Docker Hub,
 Running
 ==
 
-To run the container,
+Run the container and browse to `http://containerhost/nagios/`,
 
     # docker run --name nagios -d -p 80:80 <username>/nagios
 

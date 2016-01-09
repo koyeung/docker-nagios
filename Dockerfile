@@ -43,7 +43,7 @@ RUN /usr/sbin/useradd -m -s /bin/bash ${NAGIOS_USER}  && \
 ADD https://assets.nagios.com/downloads/nagioscore/releases/nagios-${NAGIOS_VERSION}.tar.gz /tmp/
 ADD http://www.nagios-plugins.org/download/nagios-plugins-${NAGIOS_PLUGIN_VERSION}.tar.gz /tmp/
 
-# Compile and install Nagios
+# Compile, install Nagios, and web interface
 RUN cd /tmp  && \
     tar zxf /tmp/nagios-${NAGIOS_VERSION}.tar.gz  && \
     cd nagios-${NAGIOS_VERSION} && \
@@ -52,12 +52,13 @@ RUN cd /tmp  && \
     make install  && \
     make install-init  && \
     make install-config  && \
-    make install-commandmode
-
-# Configure the Web Interface
-RUN cd /tmp/nagios-${NAGIOS_VERSION}  && \
+    make install-commandmode  && \
     make install-webconf  && \
-    a2enconf nagios  && \
+    cd /tmp  && \
+    rm -rf nagios-${NAGIOS_VERSION}
+
+# Enable web config
+RUN a2enconf nagios  && \
     a2enmod cgi
 
 # Compile and install Nagios Plugins
@@ -66,7 +67,9 @@ RUN cd /tmp  && \
     cd nagios-plugins-${NAGIOS_PLUGIN_VERSION}  && \
     ./configure --with-nagios-user=${NAGIOS_USER} --with-nagios-group=${NAGIOS_GROUP}  && \
     make  && \
-    make install
+    make install  && \
+    cd /tmp  && \
+    rm -rf nagios-plugins-${NAGIOS_PLUGIN_VERSION}
 
 # Customize configuration
 RUN sed -ri -e 's/(^\s+email\s+)\S+(.*)/\1'${NAGIOSADMIN_EMAIL}'\2/' ${NAGIOS_HOME}/etc/objects/contacts.cfg
