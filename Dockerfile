@@ -40,8 +40,8 @@ RUN /usr/sbin/useradd -m -s /bin/bash ${NAGIOS_USER}  && \
     /usr/sbin/usermod -a -G ${NAGIOS_CMDGROUP} ${APACHE_RUN_USER}
 
 # Download Nagios and the Plugins
-ADD https://assets.nagios.com/downloads/nagioscore/releases/nagios-${NAGIOS_VERSION}.tar.gz /tmp
-ADD http://www.nagios-plugins.org/download/nagios-plugins-${NAGIOS_PLUGIN_VERSION}.tar.gz /tmp
+ADD https://assets.nagios.com/downloads/nagioscore/releases/nagios-${NAGIOS_VERSION}.tar.gz /tmp/
+ADD http://www.nagios-plugins.org/download/nagios-plugins-${NAGIOS_PLUGIN_VERSION}.tar.gz /tmp/
 
 # Compile and install Nagios
 RUN cd /tmp  && \
@@ -71,15 +71,15 @@ RUN cd /tmp  && \
 # Customize configuration
 RUN sed -ri -e 's/(^\s+email\s+)\S+(.*)/\1'${NAGIOSADMIN_EMAIL}'\2/' ${NAGIOS_HOME}/etc/objects/contacts.cfg
 
-# change system timezone
-RUN echo "${SYSTEM_TIMEZONE}" > /etc/timezone  && \
-    dpkg-reconfigure tzdata
-
-# use /usr/bin/mail instead of /bin/mail
+# patch: use /usr/bin/mail instead of /bin/mail
 RUN sed -i -e 's,/bin/mail,/usr/bin/mail,' ${NAGIOS_HOME}/etc/objects/commands.cfg
 
 # config test
 RUN /etc/init.d/nagios configtest
+
+# change system timezone
+RUN echo "${SYSTEM_TIMEZONE}" > /etc/timezone  && \
+    dpkg-reconfigure tzdata
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
