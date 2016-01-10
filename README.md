@@ -34,6 +34,6 @@ The following are configurable environment variables (and the default values)
     NAGIOSADMIN_USER=nagiosadmin
     NAGIOSADMIN_PASS=nagios
     NAGIOSADMIN_EMAIL=nagios@localhost
-    SYSTEM_TIMEZONE=Etc/UTC
+    TZ=Etc/UTC
 
 Please check `Dockerfile` for more information.

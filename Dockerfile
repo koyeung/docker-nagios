@@ -20,8 +20,8 @@ ENV NAGIOSADMIN_PASS nagios
 ENV NAGIOSADMIN_EMAIL nagios@localhost
 
 # see /usr/share/zoneinfo for list of timezones
-# ENV SYSTEM_TIMEZONE Asia/Hong_Kong
-ENV SYSTEM_TIMEZONE Etc/UTC
+# ENV TZ Asia/Hong_Kong
+ENV TZ Etc/UTC
 
 #
 # Non-configurable variables
