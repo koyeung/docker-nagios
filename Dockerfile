@@ -10,16 +10,23 @@ ENV NAGIOS_USER nagios
 ENV NAGIOS_GROUP nagios
 ENV NAGIOS_CMDGROUP nagcmd
 
+#
+# Configurable when container is launched
+#
+# Web UI logon
+ENV NAGIOSADMIN_USER nagiosadmin
+ENV NAGIOSADMIN_PASS nagios
+
+ENV NAGIOSADMIN_EMAIL nagios@localhost
+
 # see /usr/share/zoneinfo for list of timezones
 # ENV SYSTEM_TIMEZONE Asia/Hong_Kong
 ENV SYSTEM_TIMEZONE Etc/UTC
 
-ENV NAGIOSADMIN_USER nagiosadmin
-ENV NAGIOSADMIN_PASS nagios
-ENV NAGIOSADMIN_EMAIL nagios@localhost
-
+#
 # Non-configurable variables
-# matching default values of software packages
+#   to match default values of software packages
+#
 ENV NAGIOS_HOME /usr/local/nagios
 ENV NAGIOS_HTTPD_CONFDIR /etc/apache2/conf-available
 ENV APACHE_RUN_USER www-data
