@@ -71,18 +71,11 @@ RUN cd /tmp  && \
     cd /tmp  && \
     rm -rf nagios-plugins-${NAGIOS_PLUGIN_VERSION}
 
-# Customize configuration
-RUN sed -ri -e 's/(^\s+email\s+)\S+(.*)/\1'${NAGIOSADMIN_EMAIL}'\2/' ${NAGIOS_HOME}/etc/objects/contacts.cfg
-
 # patch: use /usr/bin/mail instead of /bin/mail
 RUN sed -i -e 's,/bin/mail,/usr/bin/mail,' ${NAGIOS_HOME}/etc/objects/commands.cfg
 
 # config test
 RUN /etc/init.d/nagios configtest
-
-# change system timezone
-RUN echo "${SYSTEM_TIMEZONE}" > /etc/timezone  && \
-    dpkg-reconfigure tzdata
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
